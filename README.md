@@ -7,7 +7,7 @@ This page contains the following resources:
 
 update *02-07-19*  
 - started this Github page
-- Added Exmaples 
+- Added Exmaples:
     BG96_KPN_NL_CAT-M.ino
     BG96_T-Mobile_NL_NB-IoT.ino
 - Added Docs 
