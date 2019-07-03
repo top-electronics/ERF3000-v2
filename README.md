@@ -5,7 +5,7 @@ This page contains the following resources:
 - Exmaples
 - Tools 
 
-#### update *02-07-19*  
+#### update *03-07-19*   
  * started this Github page
  * Added Exmaples:
    - BG96_KPN_NL_CAT-M.ino
@@ -13,9 +13,6 @@ This page contains the following resources:
  * Added Docs 
    - ERF3000v2 Datasheet_V1.0.pdf 
    - ERF3000v2 User_Guide_V1.0.pdf
-    
-#### update *03-07-19*   
- * Added Docs 
    - AT-Manuals
  * Added Tools
    - QCOM_V1.6
