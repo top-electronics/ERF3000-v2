@@ -23,7 +23,7 @@ This page contains the following resources:
    - Qnavigator_V1.6.8
 
 
-### update *04-07-19*
+#### update *04-07-19*
 
 * removed Examples:
    - BG96_KPN_NL_CAT-M.ino
