@@ -10,7 +10,7 @@ This page contains the following resources:
 #### update *03-07-19*   
 
  * started this Github page
- * Added Exmaples:
+ * Added Examples:
    - BG96_KPN_NL_CAT-M.ino
    - BG96_T-Mobile_NL_NB-IoT.ino
  * Added Docs 
@@ -22,4 +22,16 @@ This page contains the following resources:
    - QFlash_V4.11
    - Qnavigator_V1.6.8
 
+
+### update *04-07-19*
+
+* removed Examples:
+   - BG96_KPN_NL_CAT-M.ino
+   - BG96_T-Mobile_NL_NB-IoT.ino
+* Added Examples:
+   - BG96_KPN_NL_CAT-M_HTTP.ino
+   - BG96_KPN_NL_CAT-M_TCP.ino
+   - BG96_T-Mobile_NL_NB-IoT_UDP.ino
+   - BG96_VodafoneZiggo_NL_NB-IoT_UDP.ino
+   - BG96_GNSS.ino
 
