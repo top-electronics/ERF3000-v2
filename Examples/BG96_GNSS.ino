@@ -24,83 +24,15 @@ void setup()
   Serial.write("\r\n");
   Serial.write("start of script\r\n");
 
-  /////////////////BASIC DATA/////////////////
-  BG96.write("AT\r");
-  ShowSerialData();
-  BG96.write("AT+CPSMS=0\r");
-  ShowSerialData();
-  BG96.write("AT+GMM\r");
-  ShowSerialData();
-  BG96.write("AT+GMR\r");
-  ShowSerialData();
-  BG96.write("AT+QAPPVER\r");
-  ShowSerialData();
-
-  //////////////////NETWORK SETTINGS/////////////////////
-  BG96.write("AT+CFUN=0\r");
-  ShowSerialData();
-  BG96.write("AT+QCFG=\"BAND\",1,80000,1,1\r");
-  ShowSerialData();
-  BG96.write("AT+QCFG=\"NWSCANMODE\",3,1\r");
-  ShowSerialData();
-  BG96.write("AT+QCFG=\"NWSCANSEQ\",020202,1\r");
-  ShowSerialData();
-  BG96.write("AT+QCFG=\"IOTOPMODE\",2,1\r");
-  ShowSerialData();
-  BG96.write("AT+CFUN=1\r");
-  ShowSerialData();
-
-  /////////////////CONNECTING TO NETWORK///////////////////
-  delay(200);
-  BG96.write("AT+CIMI\r");
-  ShowSerialData();
-  BG96.write("AT+CGDCONT=1,\"IP\",\"internet.m2m\"\r");
-  ShowSerialData();
-  delay(200);
-  BG96.write("AT+COPS=1,2,\"20408\",8\r");
-  ShowSerialData();
-  delay(1000);
-  BG96.write("AT+CSQ\r");
-  ShowSerialData();
-  BG96.write("AT+CSQ\r");
-  ShowSerialData();
-  BG96.write("AT+QNWINFO\r");
-  ShowSerialData();
-
-  //////////////SENDING DATA//////////////////////////////
-  BG96.write("AT+QIACT=1\r");
-  ShowSerialData();
-  BG96.write("AT+QIACT?\r");
-  ShowSerialData();  
-  BG96.write("AT+QIOPEN=1,0,\"TCP\",\"220.180.239.212\",8009,0,1\r");
-  ShowSerialDataOpen();
-
-  BG96.write("AT+QNWINFO\r");
-  ShowSerialData();
-  
-  BG96.write("AT+QISEND=0,5\r");
-  ShowSerialDataOpen();
-  Serial.write("transmit data:"); 
-  BG96.write("AAAAAAAA1A");
-  ShowSerialData();
-  BG96.write("AT+QICLOSE=0\r");
-  ShowSerialData();
-  BG96.write("AT+QIDEACT=1\r");
-  ShowSerialData();
-  delay(500);
-
-  ///////////////ENTERING IN PSM////////////////////////
-  BG96.write("AT+QCFG=\"psm/enter\",1\r");
-  ShowSerialData();
-  BG96.write("AT+CPSMS=1,,,\"10100001\",\"00000001\"\r");
-  ShowSerialData();
-
+  BG96.write("AT+QGPS=4,30,1000,0,1\r");
   ShowSerialData();
 }
 
 void loop()
 {
-
+  BG96.write("AT+QGPSLOC=2\r");
+  ShowSerialData();
+  delay(1000);
 }
 
 //////////////////////////////////////////////////////////////
@@ -108,15 +40,22 @@ void loop()
 
 void Init()
 {
-  BG96.begin(115200);
+  BG96.begin(9600);
   Startup();
+
+  BG96.end();
+  BG96.begin(115200);
 
   BG96.write("AT+IPR=9600\r");
   delay(200);
   ShowSerialData1(1);
+  Serial.write("RDY\n\r");
 
   BG96.end();
   BG96.begin(9600);
+
+  BG96.write("AT+CPSMS=0\r");
+  ShowSerialData();
 }
 
 //////////////////////////////////////////////////////////////
@@ -126,7 +65,7 @@ void Startup()
 {
   BG96.write("AT\r");
   
-  if (ShowSerialData1(1) == 0) //if no response
+  if (ShowSerialData1(1) == 0) // no response
   {
     Serial.write("RST\n\r");
     digitalWrite(RST, HIGH);
@@ -134,7 +73,7 @@ void Startup()
     digitalWrite(RST, LOW);
     Serial.write("RST done \n\r");
     
-    if (ShowSerialData1(20) == 0) // if no response
+    if (ShowSerialData1(20) == 0) // no response
       {
      Serial.write("PWR\n\r");
      digitalWrite(PWR, HIGH);
@@ -157,6 +96,7 @@ int ShowSerialData()
 
   while (receive_done == 0)
   {
+    
     if (BG96.available() != 0)
     {
       RXchar = BG96.read();
@@ -254,6 +194,7 @@ int ShowSerialData1(int value)
         Data = "";
         receive_done = 1;
         Serial.write("reponse was OK\n\r");
+        y = 0;
       }
 
       if (Data[x - 2] == 'R' && Data[x - 1] == 'D' && Data[x] == 'Y') //OPEN
@@ -262,6 +203,7 @@ int ShowSerialData1(int value)
         Data = "";
         receive_done = 1;
         Serial.write("reponse was RDY\n\r");
+        y = 0; 
       }  
       
       x++;

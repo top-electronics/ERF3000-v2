@@ -8,7 +8,6 @@ char RXchar;
 int receive_done = 0;
 String Data = "";
 
-
 void setup()
 {
   Serial.begin(9600);
@@ -22,13 +21,12 @@ void setup()
   pinMode(RST, OUTPUT);
 
   Init();
+  
   Serial.write("\r\n");
   Serial.write("start of script\r\n");
 
   /////////////////BASIC DATA/////////////////
   BG96.write("AT\r");
-  ShowSerialData();
-  BG96.write("AT+CPSMS=0\r");
   ShowSerialData();
   BG96.write("AT+GMM\r");
   ShowSerialData();
@@ -40,11 +38,11 @@ void setup()
   //////////////////NETWORK SETTINGS/////////////////////
   BG96.write("AT+CFUN=0\r");
   ShowSerialData();
-  BG96.write("AT+QCFG=\"BAND\",1,1,80,1\r");
+  BG96.write("AT+QCFG=\"BAND\",1,80000,1,1\r");
   ShowSerialData();
   BG96.write("AT+QCFG=\"NWSCANMODE\",3,1\r");
   ShowSerialData();
-  BG96.write("AT+QCFG=\"NWSCANSEQ\",030303,1\r");
+  BG96.write("AT+QCFG=\"NWSCANSEQ\",020202,1\r");
   ShowSerialData();
   BG96.write("AT+QCFG=\"IOTOPMODE\",2,1\r");
   ShowSerialData();
@@ -55,9 +53,13 @@ void setup()
   delay(200);
   BG96.write("AT+CIMI\r");
   ShowSerialData();
-  BG96.write("AT+CGDCONT=1,\"IP\",\"CDP.IOT.T-MOBILE.NL\"\r");
+  BG96.write("AT+CGDCONT=1,\"IP\",\"internet.m2m\"\r");
   ShowSerialData();
-  BG96.write("AT+COPS=1,2,\"20416\",9\r");
+  delay(200);
+  BG96.write("AT+COPS=1,2,\"20408\",8\r");
+  ShowSerialData();
+  delay(1000);
+  BG96.write("AT+CSQ\r");
   ShowSerialData();
   BG96.write("AT+CSQ\r");
   ShowSerialData();
@@ -69,12 +71,14 @@ void setup()
   ShowSerialData();
   BG96.write("AT+QIACT?\r");
   ShowSerialData();
-  BG96.write("AT+QIOPEN=1,0,\"UDP\",\"172.27.131.100\",15683\r");
+  BG96.write("AT+QIOPEN=1,0,\"TCP\",\"220.180.239.212\",8009,0,1\r");
   ShowSerialDataOpen();
+  BG96.write("AT+QNWINFO\r");
+  ShowSerialData();
   BG96.write("AT+QISEND=0,5\r");
   ShowSerialDataOpen();
-  Serial.write("transmit data:"); 
-  BG96.write("1A1A1");
+  Serial.write("transmit data:");
+  BG96.write("AAAAAAAA1A");
   ShowSerialData();
   BG96.write("AT+QICLOSE=0\r");
   ShowSerialData();
@@ -101,7 +105,7 @@ void loop()
 
 void Init()
 {
-  BG96.begin(115200);
+  BG96.begin(9600);
   Startup();
 
   BG96.write("AT+IPR=9600\r");
@@ -109,7 +113,11 @@ void Init()
   ShowSerialData1(1);
 
   BG96.end();
+  delay(100);
   BG96.begin(9600);
+
+  BG96.write("AT+CPSMS=0\r");
+  ShowSerialData1(1);
 }
 
 //////////////////////////////////////////////////////////////
@@ -118,25 +126,32 @@ void Init()
 void Startup()
 {
   BG96.write("AT\r");
-  
+
   if (ShowSerialData1(1) == 0) //if no response
   {
-    Serial.write("RST\n\r");
-    digitalWrite(RST, HIGH);
-    delay(1000);
-    digitalWrite(RST, LOW);
-    Serial.write("RST done \n\r");
-    
-    if (ShowSerialData1(20) == 0) // if no response
-      {
-     Serial.write("PWR\n\r");
-     digitalWrite(PWR, HIGH);
-     delay(1000);
-     digitalWrite(PWR, LOW);
-     Serial.write("PWR done\n\r");
+    BG96.end();
+    BG96.begin(115200);
+    BG96.write("AT\r");
 
-      ShowSerialData1(10);
-      } 
+    if (ShowSerialData1(1) == 0) //if no response
+    {
+      Serial.write("TIMEOUT -> RST \n\r");
+      digitalWrite(RST, HIGH);
+      delay(1000);
+      digitalWrite(RST, LOW);
+      Serial.write("RST done \n\r");
+
+      if (ShowSerialData1(20) == 0) // if no response
+      {
+        Serial.write("TIMEOUT ->PWR\n\r");
+        digitalWrite(PWR, HIGH);
+        delay(1000);
+        digitalWrite(PWR, LOW);
+        Serial.write("PWR done\n\r");
+
+        ShowSerialData1(10);
+      }
+    }
   }
 }
 
@@ -162,7 +177,7 @@ int ShowSerialData()
         Data = "";
       }
 
-      if (Data[x - 2] == 'O' && Data[x - 1] == 'K' && Data[x] == '\r') //OK
+      if (Data[x -1 ] == 'O' && Data[x] == 'K') //OK
       {
         receive_done = 1;
         Data = "";
@@ -176,6 +191,7 @@ int ShowSerialData()
 
       x++;
     }
+
   }
   Serial.write("\n");
   return receive_done;
@@ -214,9 +230,9 @@ void ShowSerialDataOpen()
         receive_done = 1;
         Data = "";
       }
-      
+
       x++;
-      
+
     }
   }
   Serial.write("\n");
@@ -229,10 +245,10 @@ int ShowSerialData1(int value)
 {
   int val;
   x = 0;
-  y = 0; 
-  z = 0; 
+  y = 0;
+  z = 0;
   val = 0;
-  receive_done = 0; 
+  receive_done = 0;
 
   while (receive_done == 0)
   {
@@ -240,7 +256,7 @@ int ShowSerialData1(int value)
     {
       RXchar = BG96.read();
       Data.concat(RXchar);
-      
+
       if (Data[x - 1] == 'O' && Data[x] == 'K') //OPEN
       {
         val = 1;
@@ -255,23 +271,22 @@ int ShowSerialData1(int value)
         Data = "";
         receive_done = 1;
         Serial.write("reponse was RDY\n\r");
-      }  
-      
+      }
+
       x++;
     }
-    
-    if(y == 32767)
+
+    if (y == 32767)
     {
       y = 0;
-      if(z == value)
+      if (z == value)
       {
-        Serial.write("TIMEOUT -> ");
-        receive_done = 1; 
+        receive_done = 1;
         val = 0;
-      } 
+      }
       z++ ;
     }
-       y++;
+    y++;
   }
   return val;
 }
