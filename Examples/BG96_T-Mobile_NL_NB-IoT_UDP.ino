@@ -134,7 +134,7 @@ void Startup()
     {
       Serial.write("TIMEOUT -> RST \n\r");
       digitalWrite(RST, HIGH);
-      delay(1000);
+      delay(200);
       digitalWrite(RST, LOW);
       Serial.write("RST done \n\r");
 
@@ -142,7 +142,7 @@ void Startup()
       {
         Serial.write("TIMEOUT ->PWR\n\r");
         digitalWrite(PWR, HIGH);
-        delay(1000);
+        delay(500);
         digitalWrite(PWR, LOW);
         Serial.write("PWR done\n\r");
 
