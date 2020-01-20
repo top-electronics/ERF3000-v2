@@ -42,7 +42,7 @@ void setup()
   ShowSerialData();
   BG96.write("AT+QCFG=\"NWSCANMODE\",3,1\r");
   ShowSerialData();
-  BG96.write("AT+QCFG=\"NWSCANSEQ\",020202,1\r");
+  BG96.write("AT+QCFG=\"NWSCANSEQ\",020103,1\r");
   ShowSerialData();
   BG96.write("AT+QCFG=\"IOTOPMODE\",2,1\r");
   ShowSerialData();
