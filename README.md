@@ -6,6 +6,13 @@ This page contains the following resources:
 - Tools 
 - README.md
 
+#### update *20-01-20*
+* updated exmaples 
+   - BG96_KPN_NL_CAT-M_HTTP.ino
+   - BG96_KPN_NL_CAT-M_TCP.ino
+   - BG96_T-Mobile_NL_NB-IoT_UDP.ino
+   - BG96_VodafoneZiggo_NL_NB-IoT_UDP.ino
+
 #### update *04-07-19*
 
 * removed Examples:
